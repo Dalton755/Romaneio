@@ -151,22 +151,22 @@ const card=document.createElement("div");
 
 card.className="casa";
 
-card.innerHTML=`
+card.innerHTML = `
 
 <div class="sequence">
-Parada ${casa.sequence}
+Parada ${casa.stop}
 </div>
 
 <div class="numero">
-${casa.numero||"-"}
+${casa.numero || "-"}
 </div>
 
 <div class="pacote">
-Pacote ${casa.stop}
+Pacote ${casa.sequence}
 </div>
 
 <div class="complemento">
-${casa.complemento||""}
+${casa.complemento || ""}
 </div>
 
 <input class="check" type="checkbox">
