@@ -95,96 +95,136 @@
 
 <script>
 
-  // 🔥 URL WEB APP DO APPS SCRIPT
-  const API_URL = "https://script.google.com/macros/s/AKfycbxO2r6vBrHac05awURHVq71CtZ8Dy3YBitvRSCHw6BJX6-2uh9xg77yKOf2Ta2t-L3r3g/exec";
+const API_URL="COLE_SUA_URL_APPS_SCRIPT_AQUI";
 
-  async function carregarDados(){
+async function carregarDados(){
 
-    const response = await fetch(API_URL);
-    const dados = await response.json();
+try{
 
-    const app = document.getElementById("app");
+const response=await fetch(API_URL);
 
-    // 🔥 Agrupar por rua
-    const agrupado = {};
+const dados=await response.json();
 
-    dados.forEach(item => {
+const app=document.getElementById("app");
 
-      const rua = item.rua;
+app.innerHTML="";
 
-      if(!agrupado[rua]){
-        agrupado[rua] = [];
-      }
+const agrupado={};
 
-      agrupado[rua].push(item);
-    });
+// agrupar ruas
+dados.forEach(item=>{
 
-    // 🔥 Ordenar por Sequence
-    Object.keys(agrupado)
-      .sort((a,b)=> agrupado[a][0].sequence - agrupado[b][0].sequence)
-      .forEach(rua => {
+if(!agrupado[item.rua]){
+agrupado[item.rua]=[];
+}
 
-      const ruaDiv = document.createElement("div");
-      ruaDiv.className = "rua";
+agrupado[item.rua].push(item);
 
-      const titulo = document.createElement("div");
-      titulo.className = "titulo-rua";
-      titulo.innerText = rua;
+});
 
-      ruaDiv.appendChild(titulo);
 
-      agrupado[rua].forEach(casa => {
+// ordenar ruas pela menor sequence
+const ruasOrdenadas=Object.keys(agrupado)
+.sort((a,b)=>{
 
-        const casaDiv = document.createElement("div");
-        casaDiv.className = "casa";
+return agrupado[a][0].sequence-
+agrupado[b][0].sequence
 
-        casaDiv.innerHTML = `
-          <div class="sequence">
-            Parada ${casa.sequence}
-          </div>
+});
 
-          <div class="numero">
-            ${casa.numero || "-"}
-          </div>
+ruasOrdenadas.forEach(nomeRua=>{
 
-          <div class="pacote">
-            Pacote: ${casa.stop}
-          </div>
+const ruaDiv=document.createElement("div");
+ruaDiv.className="rua";
 
-          <div class="complemento">
-            ${casa.complemento || ""}
-          </div>
+ruaDiv.innerHTML=`
+<div class="titulo-rua">
+${nomeRua}
+</div>
+`;
 
-          <input type="checkbox" class="check">
-        `;
+agrupado[nomeRua]
+.sort((a,b)=>a.sequence-b.sequence)
+.forEach(casa=>{
 
-        const checkbox = casaDiv.querySelector(".check");
+const card=document.createElement("div");
 
-        checkbox.addEventListener("change", ()=>{
+card.className="casa";
 
-          casaDiv.classList.toggle("concluida");
+card.innerHTML=`
 
-          const todasCasas = ruaDiv.querySelectorAll(".check");
-          const marcadas = ruaDiv.querySelectorAll(".check:checked");
+<div class="sequence">
+Parada ${casa.sequence}
+</div>
 
-          if(todasCasas.length === marcadas.length){
-            ruaDiv.classList.add("finalizada");
-          }else{
-            ruaDiv.classList.remove("finalizada");
-          }
-        });
+<div class="numero">
+${casa.numero||"-"}
+</div>
 
-        ruaDiv.appendChild(casaDiv);
-      });
+<div class="pacote">
+Pacote ${casa.stop}
+</div>
 
-      app.appendChild(ruaDiv);
-    });
+<div class="complemento">
+${casa.complemento||""}
+</div>
 
-  }
+<input class="check" type="checkbox">
 
-  carregarDados();
+`;
+
+const checkbox=
+card.querySelector(".check");
+
+checkbox.addEventListener("change",()=>{
+
+card.classList.toggle(
+"concluida"
+);
+
+const total=
+ruaDiv.querySelectorAll(".check");
+
+const marcadas=
+ruaDiv.querySelectorAll(
+".check:checked"
+);
+
+if(total.length===marcadas.length){
+
+ruaDiv.classList.add(
+"finalizada"
+);
+
+}else{
+
+ruaDiv.classList.remove(
+"finalizada"
+);
+
+}
+
+});
+
+ruaDiv.appendChild(card);
+
+});
+
+app.appendChild(ruaDiv);
+
+});
+
+}catch(erro){
+
+document.body.innerHTML=
+`Erro: ${erro}`;
+
+}
+
+}
+
+carregarDados();
 
 </script>
-
 </body>
 </html>
