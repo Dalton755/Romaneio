@@ -19,73 +19,121 @@
       color:#222;
     }
 
-    .rua{
-      background:#fff;
-      border-radius:16px;
-      padding:16px;
-      margin-bottom:16px;
-      box-shadow:0 2px 10px rgba(0,0,0,.08);
-      transition:.3s;
-    }
+  .rua{
 
-    .rua.finalizada{
-      background:#dff7df;
-      opacity:.8;
-    }
+background:#fff;
+padding:16px;
+border-radius:16px;
+margin-bottom:20px;
 
-    .rua.finalizada .titulo-rua{
-      text-decoration:line-through;
-      color:#2e7d32;
-    }
+box-shadow:
+0 2px 10px rgba(0,0,0,.08);
 
-    .titulo-rua{
-      font-size:20px;
-      font-weight:bold;
-      margin-bottom:12px;
-    }
+}
 
-    .casa{
-      border:1px solid #e5e5e5;
-      border-radius:12px;
-      padding:12px;
-      margin-bottom:10px;
-      transition:.3s;
-    }
+.titulo-rua{
 
-    .casa.concluida{
-      background:#dff7df;
-      border-color:#4caf50;
-    }
+font-size:20px;
+font-weight:bold;
+margin-bottom:5px;
 
-    .numero{
-      font-size:22px;
-      font-weight:bold;
-      margin-bottom:6px;
-    }
+}
 
-    .pacote{
-      font-size:16px;
-      color:#444;
-      margin-bottom:4px;
-    }
+.parada{
 
-    .complemento{
-      font-size:14px;
-      color:#777;
-      margin-bottom:10px;
-    }
+font-size:14px;
+color:#666;
+margin-bottom:15px;
 
-    .check{
-      width:24px;
-      height:24px;
-      cursor:pointer;
-    }
+}
 
-    .sequence{
-      font-size:12px;
-      color:#999;
-      margin-bottom:8px;
-    }
+.grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(4,1fr);
+
+gap:10px;
+
+}
+
+@media(max-width:700px){
+
+.grid{
+
+grid-template-columns:
+repeat(2,1fr);
+
+}
+
+}
+
+.pacote-card{
+
+padding:12px;
+
+border-radius:12px;
+
+background:#f7f7f7;
+
+border:1px solid #ddd;
+
+transition:.3s;
+
+}
+
+.pacote-card.concluida{
+
+background:#dff7df;
+border-color:#4caf50;
+
+}
+
+.numero{
+
+font-size:22px;
+font-weight:bold;
+
+}
+
+.pacote{
+
+margin-top:6px;
+font-weight:bold;
+
+}
+
+.complemento{
+
+font-size:13px;
+color:#666;
+margin-top:8px;
+
+}
+
+.check{
+
+margin-top:10px;
+width:22px;
+height:22px;
+
+cursor:pointer;
+
+}
+
+.finalizada{
+
+background:#dff7df;
+
+}
+
+.finalizada .titulo-rua{
+
+text-decoration:line-through;
+color:#2e7d32;
+
+}
   </style>
 </head>
 
@@ -135,48 +183,68 @@ agrupado[b][0].sequence
 ruasOrdenadas.forEach(nomeRua=>{
 
 const ruaDiv=document.createElement("div");
+
 ruaDiv.className="rua";
 
+const parada=
+agrupado[nomeRua][0].stop;
+
 ruaDiv.innerHTML=`
+
 <div class="titulo-rua">
 ${nomeRua}
 </div>
+
+<div class="parada">
+Parada ${parada}
+</div>
+
+<div class="grid"></div>
+
 `;
 
+const grid=
+ruaDiv.querySelector(".grid");
+
 agrupado[nomeRua]
+
 .sort((a,b)=>a.sequence-b.sequence)
-.forEach(casa=>{
 
-const card=document.createElement("div");
+.forEach(item=>{
 
-card.className="casa";
+const card=
+document.createElement("div");
 
-card.innerHTML = `
+card.className=
+"pacote-card";
 
-<div class="sequence">
-Parada ${casa.stop}
+card.innerHTML=`
+
+<div class="pacote">
+Pacote ${item.sequence}
 </div>
 
 <div class="numero">
-${casa.numero || "-"}
-</div>
-
-<div class="pacote">
-Pacote ${casa.sequence}
+${item.numero||"-"}
 </div>
 
 <div class="complemento">
-${casa.complemento || ""}
+${item.complemento||""}
 </div>
 
-<input class="check" type="checkbox">
+<input
+type="checkbox"
+class="check"
+>
 
 `;
 
 const checkbox=
 card.querySelector(".check");
 
-checkbox.addEventListener("change",()=>{
+checkbox.addEventListener(
+"change",
+()=>{
 
 card.classList.toggle(
 "concluida"
@@ -185,12 +253,15 @@ card.classList.toggle(
 const total=
 ruaDiv.querySelectorAll(".check");
 
-const marcadas=
+const marcados=
 ruaDiv.querySelectorAll(
 ".check:checked"
 );
 
-if(total.length===marcadas.length){
+if(
+total.length===
+marcados.length
+){
 
 ruaDiv.classList.add(
 "finalizada"
@@ -204,9 +275,10 @@ ruaDiv.classList.remove(
 
 }
 
-});
+}
+);
 
-ruaDiv.appendChild(card);
+grid.appendChild(card);
 
 });
 
