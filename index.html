@@ -416,21 +416,39 @@ ruaDiv.querySelector(
 ".grid"
 );
 
+// agrupar por número da casa
+const casasAgrupadas={};
+
 agrupado[rua]
 
-.sort((a,b)=>{
-
-return(
-parseInt(a.numero)||0
-)
+.sort((a,b)=>
+(parseInt(a.numero)||0)
 -
-(
-parseInt(b.numero)||0
+(parseInt(b.numero)||0)
 )
-
-})
 
 .forEach(item=>{
+
+const numero=item.numero||"-";
+
+if(!casasAgrupadas[numero]){
+
+casasAgrupadas[numero]=[];
+
+}
+
+casasAgrupadas[numero]
+.push(item);
+
+});
+
+
+Object.keys(casasAgrupadas)
+
+.forEach(numero=>{
+
+const itens=
+casasAgrupadas[numero];
 
 const card=
 document.createElement(
@@ -440,33 +458,67 @@ document.createElement(
 card.className=
 "card";
 
-card.innerHTML=`
+card.style.gridColumn=
+`span ${Math.min(
+itens.length,
+4
+)}`;
 
-<div class=pacote>
+let html=`
 
-Pacote
-${item.sequence}
+<div class="numero">
+
+${numero}
 
 </div>
 
-<div class=numero>
+<div style="
+display:grid;
+grid-template-columns:
+repeat(${itens.length},1fr);
+gap:10px;
+margin-top:10px;
+">
 
-${item.numero||"-"}
+`;
+
+itens.forEach(item=>{
+
+html+=`
+
+<div>
+
+<div class="pacote">
+
+Pac ${item.sequence}
 
 </div>
 
-<div class=complemento>
+<div class="complemento">
 
 ${item.complemento||""}
 
 </div>
 
+</div>
+
+`;
+
+});
+
+html+=`
+
+</div>
+
 <input
-type=checkbox
-class=check
+type="checkbox"
+class="check"
+style="margin-top:15px;"
 >
 
 `;
+
+card.innerHTML=html;
 
 const checkbox=
 card.querySelector(
@@ -493,16 +545,18 @@ ruaDiv.querySelectorAll(
 
 ruaDiv.classList.toggle(
 "finalizada",
-total.length===marcados.length
+total.length===
+marcados.length
 );
 
 atualizarStatus();
 
 }
-
 );
 
-grid.appendChild(card);
+grid.appendChild(
+card
+);
 
 });
 
