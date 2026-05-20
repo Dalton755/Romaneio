@@ -223,6 +223,54 @@ font-size:20px;
 cursor:pointer;
 
 }
+
+.busca-container{
+
+position:relative;
+flex:1;
+
+}
+
+#sugestoes{
+
+position:absolute;
+
+top:100%;
+left:0;
+right:0;
+
+background:white;
+
+border-radius:12px;
+
+box-shadow:
+0 4px 12px rgba(0,0,0,.15);
+
+max-height:250px;
+
+overflow-y:auto;
+
+display:none;
+
+z-index:9999;
+
+}
+
+.sugestao{
+
+padding:12px;
+
+border-bottom:1px solid #eee;
+
+cursor:pointer;
+
+}
+
+.sugestao:hover{
+
+background:#f5f5f5;
+
+}    
     
   </style>
 </head>
@@ -253,14 +301,18 @@ cursor:pointer;
 
 </button>
 
+<div class="busca-container">
+
 <input
 type="text"
 id="busca"
 placeholder="Rua, número ou pacote..."
-list="sugestoes"
+autocomplete="off"
 >
 
-<datalist id="sugestoes"></datalist>
+<div id="sugestoes"></div>
+
+</div>
 
 </div>
 
@@ -431,9 +483,13 @@ document.body.innerHTML=
 
 carregarDados();
 
-const busca=document.getElementById("busca");
+const busca=
+document.getElementById(
+"busca"
+);
 
-const abrir=document.getElementById(
+const abrir=
+document.getElementById(
 "abrirPesquisa"
 );
 
@@ -442,7 +498,33 @@ document.getElementById(
 "sugestoes"
 );
 
-let indiceBusca={};
+let listaPesquisa=[];
+
+
+// montar índice
+dados.forEach(item=>{
+
+[
+item.rua,
+item.numero,
+"Pacote "+item.sequence
+
+].forEach(valor=>{
+
+if(!valor)return;
+
+listaPesquisa.push({
+
+texto:valor.toString(),
+item:item
+
+});
+
+});
+
+});
+
+
 
 abrir.onclick=()=>{
 
@@ -451,48 +533,20 @@ busca.style.display==="block"
 ?"none"
 :"block";
 
-if(busca.style.display==="block"){
+if(
+busca.style.display==="block"
+){
+
 busca.focus();
-}
 
 }
 
-
-// indexar elementos para pesquisa
-dados.forEach(item=>{
-
-const chaveRua=
-item.rua?.toLowerCase();
-
-const chaveNumero=
-item.numero?.toString();
-
-const chavePacote=
-item.sequence?.toString();
-
-[
-chaveRua,
-chaveNumero,
-chavePacote
-]
-
-.forEach(valor=>{
-
-if(!valor)return;
-
-if(!indiceBusca[valor]){
-
-indiceBusca[valor]=item;
-
-}
-
-});
-
-});
+};
 
 
 
-// autocomplete dinâmico
+
+// digitação
 busca.addEventListener(
 "input",
 ()=>{
@@ -503,80 +557,112 @@ busca.value
 
 sugestoes.innerHTML="";
 
-Object.keys(indiceBusca)
+if(
+termo.length===0
+){
 
-.filter(x=>
-x.includes(termo)
+sugestoes.style.display=
+"none";
+
+return;
+
+}
+
+
+const encontrados=
+listaPesquisa.filter(x=>
+
+x.texto
+.toLowerCase()
+.includes(termo)
+
 )
 
-.slice(0,10)
+.slice(0,10);
 
-.forEach(item=>{
 
-const option=
+encontrados.forEach(resultado=>{
+
+const div=
 document.createElement(
-"option"
+"div"
 );
 
-option.value=item;
+div.className=
+"sugestao";
+
+div.innerText=
+resultado.texto;
+
+div.onclick=()=>{
+
+buscarElemento(
+resultado.item
+);
+
+busca.value=
+resultado.texto;
+
+sugestoes.style.display=
+"none";
+
+};
 
 sugestoes.appendChild(
-option
+div
 );
 
 });
 
-}
+sugestoes.style.display=
+encontrados.length
+?"block"
+:"none";
 
-);
+});
 
 
 
 
-// localizar resultado
-function localizarResultado(){
-
-const termo=
-busca.value
-.toLowerCase();
+// localizar
+function buscarElemento(item){
 
 let encontrado=null;
 
-
-// procura rua
 document
 .querySelectorAll(".rua")
-.forEach(rua=>{
+
+.forEach(card=>{
 
 if(encontrado)return;
 
+const texto=
+card.innerText
+.toLowerCase();
+
 if(
-rua.innerText
-.toLowerCase()
-.includes(
-termo
+
+texto.includes(
+item.rua.toLowerCase()
 )
+
 ){
 
-encontrado=rua;
+encontrado=card;
 
 }
 
 });
-
 
 if(encontrado){
 
 encontrado.scrollIntoView({
 
 behavior:"smooth",
-
 block:"center"
 
 });
 
-
-// destaque temporário
 encontrado.style.boxShadow=
 "0 0 20px #4caf50";
 
@@ -592,69 +678,40 @@ encontrado.style.boxShadow=
 }
 
 
-
 // enter
 busca.addEventListener(
 "keypress",
-(e)=>{
+e=>{
 
-if(e.key==="Enter"){
+if(
+e.key==="Enter"
+){
 
-localizarResultado();
+const primeiro=
+listaPesquisa.find(x=>
 
-}
+x.texto
+.toLowerCase()
+.includes(
 
-}
+busca.value
+.toLowerCase()
+
+)
+
 );
 
+if(primeiro){
 
-// clique em sugestão
-busca.addEventListener(
-"change",
-()=>{
+buscarElemento(
+primeiro.item
+);
 
-localizarResultado();
+}
+
+}
 
 });
-
-
-
-
-// STATUS
-function atualizarStatus(){
-
-const total=
-document.querySelectorAll(
-".check"
-).length;
-
-const entregues=
-document.querySelectorAll(
-".check:checked"
-).length;
-
-document
-.getElementById(
-"entregues"
-)
-.innerText=
-entregues;
-
-document
-.getElementById(
-"pendentes"
-)
-.innerText=
-total-entregues;
-
-}
-
-document.addEventListener(
-"change",
-atualizarStatus
-);
-
-atualizarStatus();
 
 </script>
 </body>
