@@ -308,6 +308,18 @@ await fetch(API_URL);
 dados=
 await response.json();
 
+ ultimoEstado=
+JSON.stringify(
+
+dados.map(x=>({
+
+sequence:x.sequence,
+status:x.status
+
+}))
+
+); 
+
 lista=[];
 
 const app=
@@ -664,6 +676,82 @@ total-entregues;
 }
 
 carregarDados();
+
+// guarda última versão recebida
+let ultimoEstado="";
+
+// atualização automática
+setInterval(
+atualizarTempoReal,
+3000
+);
+
+
+async function atualizarTempoReal(){
+
+try{
+
+const response=
+await fetch(
+API_URL+
+"?t="+Date.now()
+);
+
+const novosDados=
+await response.json();
+
+const estadoAtual=
+JSON.stringify(
+
+novosDados.map(x=>({
+
+sequence:x.sequence,
+status:x.status
+
+}))
+
+);
+
+
+// só atualiza se houve alteração
+if(
+estadoAtual!==ultimoEstado
+){
+
+ultimoEstado=
+estadoAtual;
+
+
+// salva posição atual da tela
+const scrollAtual=
+window.scrollY;
+
+
+// reconstruir
+dados=novosDados;
+
+await carregarDados();
+
+
+// voltar para mesma posição
+window.scrollTo({
+
+top:scrollAtual
+
+});
+
+}
+
+}catch(e){
+
+console.log(
+"Erro atualização:",
+e
+);
+
+}
+
+}
 
 </script>
 
