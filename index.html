@@ -1,47 +1,190 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ruas da Rota</title>
 
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial, sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-    body{
-      background:#f5f5f5;
-      padding:12px;
-      color:#222;
-    }
+<title>Ruas da Rota</title>
 
-  .rua{
+<style>
 
-background:#fff;
-padding:16px;
-border-radius:16px;
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f5f5f5;
+padding:12px;
+}
+
+.topo{
+
+position:sticky;
+top:0;
+
+z-index:999;
+
+background:white;
+
+padding:12px;
+
 margin-bottom:20px;
+
+border-radius:16px;
+
+box-shadow:
+0 2px 10px rgba(0,0,0,.1);
+
+}
+
+.status{
+
+display:flex;
+gap:10px;
+
+margin-bottom:10px;
+
+}
+
+.box{
+
+flex:1;
+
+padding:10px;
+
+text-align:center;
+
+background:#f5f5f5;
+
+border-radius:12px;
+
+}
+
+.valor{
+
+font-size:24px;
+font-weight:bold;
+
+}
+
+.pesquisa{
+
+display:flex;
+gap:10px;
+
+position:relative;
+
+}
+
+#abrirPesquisa{
+
+border:none;
+background:#4caf50;
+
+color:white;
+
+padding:10px;
+
+border-radius:12px;
+
+font-size:20px;
+
+cursor:pointer;
+
+}
+
+#busca{
+
+display:none;
+
+flex:1;
+
+padding:10px;
+
+border:1px solid #ddd;
+
+border-radius:12px;
+
+}
+
+#sugestoes{
+
+position:absolute;
+
+top:55px;
+
+left:50px;
+right:0;
+
+background:white;
+
+border-radius:12px;
+
+overflow:hidden;
+
+box-shadow:
+0 4px 12px rgba(0,0,0,.15);
+
+display:none;
+
+max-height:250px;
+
+overflow-y:auto;
+
+}
+
+.sugestao{
+
+padding:12px;
+
+cursor:pointer;
+
+border-bottom:1px solid #eee;
+
+}
+
+.rua{
+
+background:white;
+
+padding:16px;
+
+margin-bottom:20px;
+
+border-radius:16px;
 
 box-shadow:
 0 2px 10px rgba(0,0,0,.08);
 
 }
 
-.titulo-rua{
+.finalizada{
+
+background:#dff7df;
+
+}
+
+.finalizada .titulo{
+
+text-decoration:line-through;
+color:#2e7d32;
+
+}
+
+.titulo{
 
 font-size:20px;
 font-weight:bold;
-margin-bottom:5px;
 
 }
 
 .parada{
 
-font-size:14px;
 color:#666;
 margin-bottom:15px;
 
@@ -69,7 +212,7 @@ repeat(2,1fr);
 
 }
 
-.pacote-card{
+.card{
 
 padding:12px;
 
@@ -79,13 +222,12 @@ background:#f7f7f7;
 
 border:1px solid #ddd;
 
-transition:.3s;
-
 }
 
-.pacote-card.concluida{
+.card.concluida{
 
 background:#dff7df;
+
 border-color:#4caf50;
 
 }
@@ -99,7 +241,8 @@ font-weight:bold;
 
 .pacote{
 
-margin-top:6px;
+margin-bottom:8px;
+
 font-weight:bold;
 
 }
@@ -108,187 +251,44 @@ font-weight:bold;
 
 font-size:13px;
 color:#666;
+
 margin-top:8px;
-
-}
-
-.check{
-
-margin-top:10px;
-width:22px;
-height:22px;
-
-cursor:pointer;
-
-}
-
-.finalizada{
-
-background:#dff7df;
-
-}
-
-.finalizada .titulo-rua{
-
-text-decoration:line-through;
-color:#2e7d32;
-
-}
-.topo{
-
-position:sticky;
-
-top:0;
-
-z-index:999;
-
-background:white;
-
-padding:10px;
-
-margin-bottom:15px;
-
-border-radius:16px;
-
-box-shadow:
-0 2px 10px rgba(0,0,0,.1);
-
-}
-
-.status{
-
-display:flex;
-gap:10px;
 
 margin-bottom:10px;
 
 }
 
-.box-status{
+.check{
 
-flex:1;
-
-text-align:center;
-
-padding:8px;
-
-background:#f5f5f5;
-
-border-radius:12px;
+width:22px;
+height:22px;
 
 }
 
-.box-status div{
+</style>
 
-font-size:25px;
-font-weight:bold;
-
-}
-
-.pesquisa{
-
-display:flex;
-gap:10px;
-
-}
-
-#busca{
-
-display:none;
-
-flex:1;
-
-padding:10px;
-
-border:1px solid #ddd;
-
-border-radius:12px;
-
-}
-
-#abrirPesquisa{
-
-border:none;
-
-background:#4caf50;
-
-color:white;
-
-border-radius:12px;
-
-padding:10px;
-
-font-size:20px;
-
-cursor:pointer;
-
-}
-
-.busca-container{
-
-position:relative;
-flex:1;
-
-}
-
-#sugestoes{
-
-position:absolute;
-
-top:100%;
-left:0;
-right:0;
-
-background:white;
-
-border-radius:12px;
-
-box-shadow:
-0 4px 12px rgba(0,0,0,.15);
-
-max-height:250px;
-
-overflow-y:auto;
-
-display:none;
-
-z-index:9999;
-
-}
-
-.sugestao{
-
-padding:12px;
-
-border-bottom:1px solid #eee;
-
-cursor:pointer;
-
-}
-
-.sugestao:hover{
-
-background:#f5f5f5;
-
-}    
-    
-  </style>
 </head>
 
 <body>
 
-  <div class="topo">
+<div class="topo">
 
 <div class="status">
 
-<div class="box-status">
-<div id="entregues">0</div>
+<div class="box">
+
+<div id="entregues" class="valor">0</div>
+
 <small>Entregues</small>
+
 </div>
 
-<div class="box-status">
-<div id="pendentes">0</div>
+<div class="box">
+
+<div id="pendentes" class="valor">0</div>
+
 <small>Pendentes</small>
+
 </div>
 
 </div>
@@ -296,18 +296,12 @@ background:#f5f5f5;
 <div class="pesquisa">
 
 <button id="abrirPesquisa">
-
 🔍
-
 </button>
 
-<div class="busca-container">
-
 <input
-type="text"
 id="busca"
 placeholder="Rua, número ou pacote..."
-autocomplete="off"
 >
 
 <div id="sugestoes"></div>
@@ -316,117 +310,168 @@ autocomplete="off"
 
 </div>
 
-</div>
-
 <div id="app"></div>
+
 
 <script>
 
-const API_URL="https://script.google.com/macros/s/AKfycbwQqDh-WiG_-EHlSrL-v00dvmnd06opKj9Dns7nlCTNn-jgVfhlXIgTwakURHUZHRlegA/exec";
+const API_URL=
+"SUA_URL_AQUI";
+
+let dados=[];
+let lista=[];
 
 async function carregarDados(){
 
-try{
+const response=
+await fetch(API_URL);
 
-const response=await fetch(API_URL);
+dados=
+await response.json();
 
-const dados=await response.json();
+lista=[];
 
-const app=document.getElementById("app");
+const app=
+document.getElementById("app");
 
 app.innerHTML="";
 
 const agrupado={};
 
-// agrupar ruas
 dados.forEach(item=>{
 
 if(!agrupado[item.rua]){
+
 agrupado[item.rua]=[];
+
 }
 
-agrupado[item.rua].push(item);
+agrupado[item.rua]
+.push(item);
+
+[
+item.rua,
+item.numero,
+"Pacote "+item.sequence
+
+]
+
+.forEach(valor=>{
+
+if(!valor)return;
+
+lista.push({
+
+texto:valor,
+item:item
 
 });
 
+});
 
-// ordenar ruas pela menor sequence
-const ruasOrdenadas=Object.keys(agrupado)
+});
+
+Object.keys(agrupado)
+
 .sort((a,b)=>{
 
-return agrupado[a][0].sequence-
-agrupado[b][0].sequence
+return agrupado[a][0].stop-
+agrupado[b][0].stop
 
-});
+})
 
-ruasOrdenadas.forEach(nomeRua=>{
+.forEach(rua=>{
 
-const ruaDiv=document.createElement("div");
+const ruaDiv=
+document.createElement(
+"div"
+);
 
-ruaDiv.className="rua";
-
-const parada=
-agrupado[nomeRua][0].stop;
+ruaDiv.className=
+"rua";
 
 ruaDiv.innerHTML=`
 
-<div class="titulo-rua">
-${nomeRua}
+<div class=titulo>
+
+${rua}
+
 </div>
 
-<div class="parada">
-Parada ${parada}
+<div class=parada>
+
+Parada
+${agrupado[rua][0].stop}
+
 </div>
 
-<div class="grid"></div>
+<div class=grid>
+
+</div>
 
 `;
 
 const grid=
-ruaDiv.querySelector(".grid");
+ruaDiv.querySelector(
+".grid"
+);
 
-agrupado[nomeRua]
+agrupado[rua]
 
 .sort((a,b)=>{
 
-const n1=parseInt(a.numero)||0;
-const n2=parseInt(b.numero)||0;
-
-return n1-n2;
+return(
+parseInt(a.numero)||0
+)
+-
+(
+parseInt(b.numero)||0
+)
 
 })
 
 .forEach(item=>{
 
 const card=
-document.createElement("div");
+document.createElement(
+"div"
+);
 
 card.className=
-"pacote-card";
+"card";
 
 card.innerHTML=`
 
-<div class="pacote">
-Pacote ${item.sequence}
+<div class=pacote>
+
+Pacote
+${item.sequence}
+
 </div>
 
-<div class="numero">
+<div class=numero>
+
 ${item.numero||"-"}
+
 </div>
 
-<div class="complemento">
+<div class=complemento>
+
 ${item.complemento||""}
+
 </div>
 
 <input
-type="checkbox"
-class="check"
+type=checkbox
+class=check
 >
 
 `;
 
 const checkbox=
-card.querySelector(".check");
+card.querySelector(
+".check"
+);
 
 checkbox.addEventListener(
 "change",
@@ -437,51 +482,39 @@ card.classList.toggle(
 );
 
 const total=
-ruaDiv.querySelectorAll(".check");
+ruaDiv.querySelectorAll(
+".check"
+);
 
 const marcados=
 ruaDiv.querySelectorAll(
 ".check:checked"
 );
 
-if(
-total.length===
-marcados.length
-){
-
-ruaDiv.classList.add(
-"finalizada"
+ruaDiv.classList.toggle(
+"finalizada",
+total.length===marcados.length
 );
 
-}else{
-
-ruaDiv.classList.remove(
-"finalizada"
-);
+atualizarStatus();
 
 }
 
-}
 );
 
 grid.appendChild(card);
 
 });
 
-app.appendChild(ruaDiv);
+app.appendChild(
+ruaDiv
+);
 
 });
 
-}catch(erro){
-
-document.body.innerHTML=
-`Erro: ${erro}`;
+atualizarStatus();
 
 }
-
-}
-
-carregarDados();
 
 const busca=
 document.getElementById(
@@ -498,40 +531,18 @@ document.getElementById(
 "sugestoes"
 );
 
-let listaPesquisa=[];
-
-
-// montar índice
-dados.forEach(item=>{
-
-[
-item.rua,
-item.numero,
-"Pacote "+item.sequence
-
-].forEach(valor=>{
-
-if(!valor)return;
-
-listaPesquisa.push({
-
-texto:valor.toString(),
-item:item
-
-});
-
-});
-
-});
-
-
-
 abrir.onclick=()=>{
 
+const visivel=
+getComputedStyle(
+busca
+).display;
+
 busca.style.display=
-busca.style.display==="block"
-?"none"
-:"block";
+
+visivel==="none"
+?"block"
+:"none";
 
 if(
 busca.style.display==="block"
@@ -543,10 +554,6 @@ busca.focus();
 
 };
 
-
-
-
-// digitação
 busca.addEventListener(
 "input",
 ()=>{
@@ -557,9 +564,7 @@ busca.value
 
 sugestoes.innerHTML="";
 
-if(
-termo.length===0
-){
+if(!termo){
 
 sugestoes.style.display=
 "none";
@@ -568,20 +573,21 @@ return;
 
 }
 
+lista
 
-const encontrados=
-listaPesquisa.filter(x=>
+.filter(x=>
 
 x.texto
 .toLowerCase()
-.includes(termo)
+.includes(
+termo
+)
 
 )
 
-.slice(0,10);
+.slice(0,10)
 
-
-encontrados.forEach(resultado=>{
+.forEach(x=>{
 
 const div=
 document.createElement(
@@ -592,19 +598,11 @@ div.className=
 "sugestao";
 
 div.innerText=
-resultado.texto;
+x.texto;
 
 div.onclick=()=>{
 
-buscarElemento(
-resultado.item
-);
-
-busca.value=
-resultado.texto;
-
-sugestoes.style.display=
-"none";
+buscar(x.item);
 
 };
 
@@ -615,70 +613,58 @@ div
 });
 
 sugestoes.style.display=
-encontrados.length
-?"block"
-:"none";
+"block";
 
 });
 
-
-
-
-// localizar
-function buscarElemento(item){
-
-let encontrado=null;
+function buscar(item){
 
 document
-.querySelectorAll(".rua")
+.querySelectorAll(
+".rua"
+)
 
 .forEach(card=>{
 
-if(encontrado)return;
-
-const texto=
-card.innerText
-.toLowerCase();
-
 if(
 
-texto.includes(
-item.rua.toLowerCase()
+card.innerText
+.includes(
+item.rua
 )
 
 ){
 
-encontrado=card;
+card.scrollIntoView({
 
-}
+behavior:
+"smooth",
 
-});
-
-if(encontrado){
-
-encontrado.scrollIntoView({
-
-behavior:"smooth",
-block:"center"
+block:
+"center"
 
 });
 
-encontrado.style.boxShadow=
+card.style.boxShadow=
+
 "0 0 20px #4caf50";
 
 setTimeout(()=>{
 
-encontrado.style.boxShadow=
+card.style.boxShadow=
 "";
 
 },2000);
 
 }
 
+});
+
+sugestoes.style.display=
+"none";
+
 }
 
-
-// enter
 busca.addEventListener(
 "keypress",
 e=>{
@@ -688,22 +674,11 @@ e.key==="Enter"
 ){
 
 const primeiro=
-listaPesquisa.find(x=>
-
-x.texto
-.toLowerCase()
-.includes(
-
-busca.value
-.toLowerCase()
-
-)
-
-);
+lista[0];
 
 if(primeiro){
 
-buscarElemento(
+buscar(
 primeiro.item
 );
 
@@ -713,6 +688,33 @@ primeiro.item
 
 });
 
+function atualizarStatus(){
+
+const total=
+document.querySelectorAll(
+".check"
+).length;
+
+const entregues=
+document.querySelectorAll(
+".check:checked"
+).length;
+
+document.getElementById(
+"entregues"
+).innerText=
+entregues;
+
+document.getElementById(
+"pendentes"
+).innerText=
+total-entregues;
+
+}
+
+carregarDados();
+
 </script>
+
 </body>
 </html>
