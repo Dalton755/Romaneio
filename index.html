@@ -4,9 +4,10 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
 
-<title>Ruas da Rota</title>
+<title>Rota</title>
 
 <style>
 
@@ -14,7 +15,7 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial,sans-serif;
+font-family:Arial;
 }
 
 body{
@@ -26,14 +27,13 @@ padding:12px;
 
 position:sticky;
 top:0;
-
 z-index:999;
 
 background:white;
 
 padding:12px;
 
-margin-bottom:20px;
+margin-bottom:15px;
 
 border-radius:16px;
 
@@ -57,17 +57,17 @@ flex:1;
 
 padding:10px;
 
-text-align:center;
-
 background:#f5f5f5;
 
 border-radius:12px;
+
+text-align:center;
 
 }
 
 .valor{
 
-font-size:24px;
+font-size:25px;
 font-weight:bold;
 
 }
@@ -94,8 +94,6 @@ border-radius:12px;
 
 font-size:20px;
 
-cursor:pointer;
-
 }
 
 #busca{
@@ -106,9 +104,9 @@ flex:1;
 
 padding:10px;
 
-border:1px solid #ddd;
-
 border-radius:12px;
+
+border:1px solid #ddd;
 
 }
 
@@ -117,7 +115,6 @@ border-radius:12px;
 position:absolute;
 
 top:55px;
-
 left:50px;
 right:0;
 
@@ -125,16 +122,14 @@ background:white;
 
 border-radius:12px;
 
-overflow:hidden;
-
-box-shadow:
-0 4px 12px rgba(0,0,0,.15);
-
 display:none;
 
 max-height:250px;
 
-overflow-y:auto;
+overflow:auto;
+
+box-shadow:
+0 4px 12px rgba(0,0,0,.15);
 
 }
 
@@ -152,27 +147,17 @@ border-bottom:1px solid #eee;
 
 background:white;
 
-padding:16px;
+padding:15px;
 
 margin-bottom:20px;
 
 border-radius:16px;
-
-box-shadow:
-0 2px 10px rgba(0,0,0,.08);
 
 }
 
 .finalizada{
 
 background:#dff7df;
-
-}
-
-.finalizada .titulo{
-
-text-decoration:line-through;
-color:#2e7d32;
 
 }
 
@@ -185,8 +170,8 @@ font-weight:bold;
 
 .parada{
 
-color:#666;
 margin-bottom:15px;
+color:#666;
 
 }
 
@@ -198,17 +183,6 @@ grid-template-columns:
 repeat(4,1fr);
 
 gap:10px;
-
-}
-
-@media(max-width:700px){
-
-.grid{
-
-grid-template-columns:
-repeat(2,1fr);
-
-}
 
 }
 
@@ -228,40 +202,31 @@ border:1px solid #ddd;
 
 background:#dff7df;
 
-border-color:#4caf50;
-
 }
 
 .numero{
 
-font-size:22px;
+font-size:24px;
 font-weight:bold;
-
-}
-
-.pacote{
-
-margin-bottom:8px;
-
-font-weight:bold;
-
-}
-
-.complemento{
-
-font-size:13px;
-color:#666;
-
-margin-top:8px;
-
-margin-bottom:10px;
 
 }
 
 .check{
 
+margin-top:10px;
 width:22px;
 height:22px;
+
+}
+
+@media(max-width:700px){
+
+.grid{
+
+grid-template-columns:
+repeat(2,1fr);
+
+}
 
 }
 
@@ -277,17 +242,27 @@ height:22px;
 
 <div class="box">
 
-<div id="entregues" class="valor">0</div>
+<div
+id="entregues"
+class="valor"
+>0</div>
 
-<small>Entregues</small>
+<small>
+Entregues
+</small>
 
 </div>
 
 <div class="box">
 
-<div id="pendentes" class="valor">0</div>
+<div
+id="pendentes"
+class="valor"
+>0</div>
 
-<small>Pendentes</small>
+<small>
+Pendentes
+</small>
 
 </div>
 
@@ -296,15 +271,20 @@ height:22px;
 <div class="pesquisa">
 
 <button id="abrirPesquisa">
+
 🔍
+
 </button>
 
 <input
 id="busca"
-placeholder="Rua, número ou pacote..."
+placeholder=
+"Rua, número ou pacote..."
 >
 
-<div id="sugestoes"></div>
+<div
+id="sugestoes"
+></div>
 
 </div>
 
@@ -312,11 +292,10 @@ placeholder="Rua, número ou pacote..."
 
 <div id="app"></div>
 
-
 <script>
 
 const API_URL=
-"https://script.google.com/macros/s/AKfycbxS5CHkYp0ygWF9PmExkYvtM97dSCtHybTHn993YvVLZ_lh4KnJqzWLMWG8fjkiEI1D9w/exec";
+"https://script.google.com/macros/s/AKfycbwMfuoQqu0xUHbCZSud9erXnx-9-sYH5MdMugA1gBBsC44Da0e3FA99AsWPV6RkFiPAug/exec";
 
 let dados=[];
 let lista=[];
@@ -332,7 +311,9 @@ await response.json();
 lista=[];
 
 const app=
-document.getElementById("app");
+document.getElementById(
+"app"
+);
 
 app.innerHTML="";
 
@@ -353,16 +334,15 @@ agrupado[item.rua]
 item.rua,
 item.numero,
 "Pacote "+item.sequence
-
 ]
 
-.forEach(valor=>{
+.forEach(x=>{
 
-if(!valor)return;
+if(!x)return;
 
 lista.push({
 
-texto:valor,
+texto:x,
 item:item
 
 });
@@ -371,14 +351,9 @@ item:item
 
 });
 
-Object.keys(agrupado)
-
-.sort((a,b)=>{
-
-return agrupado[a][0].stop-
-agrupado[b][0].stop
-
-})
+Object.keys(
+agrupado
+)
 
 .forEach(rua=>{
 
@@ -416,60 +391,70 @@ ruaDiv.querySelector(
 ".grid"
 );
 
-// agrupar por número da casa
-const casasAgrupadas={};
+const casas={};
 
 agrupado[rua]
 
-.sort((a,b)=>
-(parseInt(a.numero)||0)
--
-(parseInt(b.numero)||0)
-)
-
 .forEach(item=>{
 
-const numero=item.numero||"-";
+if(
+!casas[item.numero]
+){
 
-if(!casasAgrupadas[numero]){
-
-casasAgrupadas[numero]=[];
+casas[
+item.numero
+]=[];
 
 }
 
-casasAgrupadas[numero]
+casas[
+item.numero
+]
+
 .push(item);
 
 });
 
 
-Object.keys(casasAgrupadas)
+Object
+.keys(casas)
+
+.sort(
+(a,b)=>
+
+parseInt(a)
+-
+parseInt(b)
+
+)
 
 .forEach(numero=>{
 
 const itens=
-casasAgrupadas[numero];
+casas[numero];
 
 const card=
 document.createElement(
 "div"
 );
 
-card.className="card";
+card.className=
+"card";
 
-// quantidade de pacotes dentro desse endereço
-card.dataset.qtdPacotes=
+card.dataset.qtd=
 itens.length;
 
 card.style.gridColumn=
-`span ${Math.min(
+`span ${
+Math.min(
 itens.length,
 4
-)}`;
+)
+}`;
 
 let html=`
 
-<div class="numero">
+<div class=numero>
 
 ${numero}
 
@@ -478,9 +463,10 @@ ${numero}
 <div style="
 display:grid;
 grid-template-columns:
-repeat(${itens.length},1fr);
+repeat(
+${itens.length},
+1fr);
 gap:10px;
-margin-top:10px;
 ">
 
 `;
@@ -491,17 +477,12 @@ html+=`
 
 <div>
 
-<div class="pacote">
+Pac
+${item.sequence}
 
-Pac ${item.sequence}
-
-</div>
-
-<div class="complemento">
+<br>
 
 ${item.complemento||""}
-
-</div>
 
 </div>
 
@@ -514,43 +495,67 @@ html+=`
 </div>
 
 <input
-type=checkbox
 class=check
-${item.status==="Entregue"
-?"checked"
-:""}
+type=checkbox
+${itens.every(
+x=>
+x.status==="Entregue"
+)
+?"checked":""}
 >
 
 `;
 
-card.innerHTML=html;
+card.innerHTML=
+html;
 
-const checkbox=
+const check=
 card.querySelector(
 ".check"
 );
 
-checkbox.addEventListener(
+if(
+check.checked
+){
+
+card.classList.add(
+"concluida"
+);
+
+}
+
+check.addEventListener(
 "change",
 async()=>{
 
-await fetch(
+await Promise.all(
+
+itens.map(
+item=>
+
+fetch(
 API_URL,
 {
 
-method:"POST",
+method:
+"POST",
 
-body:JSON.stringify({
+body:
+JSON.stringify({
 
 sequence:
 item.sequence,
 
 entregue:
-checkbox.checked
+check.checked
 
 })
 
 }
+
+)
+
+)
 
 );
 
@@ -558,25 +563,10 @@ card.classList.toggle(
 "concluida"
 );
 
-const total=
-ruaDiv.querySelectorAll(
-".check"
-);
-
-const marcados=
-ruaDiv.querySelectorAll(
-".check:checked"
-);
-
-ruaDiv.classList.toggle(
-"finalizada",
-total.length===
-marcados.length
-);
-
 atualizarStatus();
 
 }
+
 );
 
 grid.appendChild(
@@ -595,200 +585,30 @@ atualizarStatus();
 
 }
 
-const busca=
-document.getElementById(
-"busca"
-);
-
-const abrir=
-document.getElementById(
-"abrirPesquisa"
-);
-
-const sugestoes=
-document.getElementById(
-"sugestoes"
-);
-
-abrir.onclick=()=>{
-
-const visivel=
-getComputedStyle(
-busca
-).display;
-
-busca.style.display=
-
-visivel==="none"
-?"block"
-:"none";
-
-if(
-busca.style.display==="block"
-){
-
-busca.focus();
-
-}
-
-};
-
-busca.addEventListener(
-"input",
-()=>{
-
-const termo=
-busca.value
-.toLowerCase();
-
-sugestoes.innerHTML="";
-
-if(!termo){
-
-sugestoes.style.display=
-"none";
-
-return;
-
-}
-
-lista
-
-.filter(x=>
-
-x.texto
-.toLowerCase()
-.includes(
-termo
-)
-
-)
-
-.slice(0,10)
-
-.forEach(x=>{
-
-const div=
-document.createElement(
-"div"
-);
-
-div.className=
-"sugestao";
-
-div.innerText=
-x.texto;
-
-div.onclick=()=>{
-
-buscar(x.item);
-
-};
-
-sugestoes.appendChild(
-div
-);
-
-});
-
-sugestoes.style.display=
-"block";
-
-});
-
-function buscar(item){
-
-document
-.querySelectorAll(
-".rua"
-)
-
-.forEach(card=>{
-
-if(
-
-card.innerText
-.includes(
-item.rua
-)
-
-){
-
-card.scrollIntoView({
-
-behavior:
-"smooth",
-
-block:
-"center"
-
-});
-
-card.style.boxShadow=
-
-"0 0 20px #4caf50";
-
-setTimeout(()=>{
-
-card.style.boxShadow=
-"";
-
-},2000);
-
-}
-
-});
-
-sugestoes.style.display=
-"none";
-
-}
-
-busca.addEventListener(
-"keypress",
-e=>{
-
-if(
-e.key==="Enter"
-){
-
-const primeiro=
-lista[0];
-
-if(primeiro){
-
-buscar(
-primeiro.item
-);
-
-}
-
-}
-
-});
-
 function atualizarStatus(){
 
-let totalPacotes=0;
+let total=0;
 let entregues=0;
 
 document
-.querySelectorAll(".card")
+.querySelectorAll(
+".card"
+)
+
 .forEach(card=>{
 
 const qtd=
 parseInt(
-card.dataset.qtdPacotes
-)||1;
-
-totalPacotes+=qtd;
-
-const check=
-card.querySelector(
-".check"
+card.dataset.qtd
 );
 
-if(check.checked){
+total+=qtd;
+
+if(
+card.querySelector(
+".check"
+).checked
+){
 
 entregues+=qtd;
 
@@ -796,15 +616,19 @@ entregues+=qtd;
 
 });
 
-document.getElementById(
+document
+.getElementById(
 "entregues"
-).innerText=
+)
+.innerText=
 entregues;
 
-document.getElementById(
+document
+.getElementById(
 "pendentes"
-).innerText=
-totalPacotes-entregues;
+)
+.innerText=
+total-entregues;
 
 }
 
@@ -813,4 +637,5 @@ carregarDados();
 </script>
 
 </body>
+
 </html>
