@@ -431,13 +431,18 @@ document.body.innerHTML=
 
 carregarDados();
 
-  const busca=
-document.getElementById("busca");
+const busca=document.getElementById("busca");
 
-const abrir=
-document.getElementById(
+const abrir=document.getElementById(
 "abrirPesquisa"
 );
+
+const sugestoes=
+document.getElementById(
+"sugestoes"
+);
+
+let indiceBusca={};
 
 abrir.onclick=()=>{
 
@@ -446,71 +451,176 @@ busca.style.display==="block"
 ?"none"
 :"block";
 
+if(busca.style.display==="block"){
+busca.focus();
+}
+
 }
 
 
-const sugestoes=
-document.getElementById(
-"sugestoes"
-);
-
+// indexar elementos para pesquisa
 dados.forEach(item=>{
 
+const chaveRua=
+item.rua?.toLowerCase();
+
+const chaveNumero=
+item.numero?.toString();
+
+const chavePacote=
+item.sequence?.toString();
+
 [
-item.rua,
-item.numero,
-item.sequence
+chaveRua,
+chaveNumero,
+chavePacote
 ]
 
 .forEach(valor=>{
 
 if(!valor)return;
 
-const option=
-document.createElement(
-"option"
-);
+if(!indiceBusca[valor]){
 
-option.value=valor;
+indiceBusca[valor]=item;
 
-sugestoes.appendChild(
-option
-);
+}
 
-})
+});
 
 });
 
 
+
+// autocomplete dinâmico
 busca.addEventListener(
 "input",
 ()=>{
 
 const termo=
-busca.value.toLowerCase();
-
-document
-.querySelectorAll(".rua")
-
-.forEach(rua=>{
-
-const texto=
-rua.innerText
+busca.value
 .toLowerCase();
 
-rua.style.display=
+sugestoes.innerHTML="";
 
-texto.includes(termo)
-?"block"
-:"none";
+Object.keys(indiceBusca)
 
-})
+.filter(x=>
+x.includes(termo)
+)
+
+.slice(0,10)
+
+.forEach(item=>{
+
+const option=
+document.createElement(
+"option"
+);
+
+option.value=item;
+
+sugestoes.appendChild(
+option
+);
+
+});
 
 }
 
 );
 
 
+
+
+// localizar resultado
+function localizarResultado(){
+
+const termo=
+busca.value
+.toLowerCase();
+
+let encontrado=null;
+
+
+// procura rua
+document
+.querySelectorAll(".rua")
+.forEach(rua=>{
+
+if(encontrado)return;
+
+if(
+rua.innerText
+.toLowerCase()
+.includes(
+termo
+)
+){
+
+encontrado=rua;
+
+}
+
+});
+
+
+if(encontrado){
+
+encontrado.scrollIntoView({
+
+behavior:"smooth",
+
+block:"center"
+
+});
+
+
+// destaque temporário
+encontrado.style.boxShadow=
+"0 0 20px #4caf50";
+
+setTimeout(()=>{
+
+encontrado.style.boxShadow=
+"";
+
+},2000);
+
+}
+
+}
+
+
+
+// enter
+busca.addEventListener(
+"keypress",
+(e)=>{
+
+if(e.key==="Enter"){
+
+localizarResultado();
+
+}
+
+}
+);
+
+
+// clique em sugestão
+busca.addEventListener(
+"change",
+()=>{
+
+localizarResultado();
+
+});
+
+
+
+
+// STATUS
 function atualizarStatus(){
 
 const total=
@@ -539,8 +649,7 @@ total-entregues;
 
 }
 
-document
-.addEventListener(
+document.addEventListener(
 "change",
 atualizarStatus
 );
