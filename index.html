@@ -455,8 +455,11 @@ document.createElement(
 "div"
 );
 
-card.className=
-"card";
+card.className="card";
+
+// quantidade de pacotes dentro desse endereço
+card.dataset.qtdPacotes=
+itens.length;
 
 card.style.gridColumn=
 `span ${Math.min(
@@ -744,15 +747,32 @@ primeiro.item
 
 function atualizarStatus(){
 
-const total=
-document.querySelectorAll(
-".check"
-).length;
+let totalPacotes=0;
+let entregues=0;
 
-const entregues=
-document.querySelectorAll(
-".check:checked"
-).length;
+document
+.querySelectorAll(".card")
+.forEach(card=>{
+
+const qtd=
+parseInt(
+card.dataset.qtdPacotes
+)||1;
+
+totalPacotes+=qtd;
+
+const check=
+card.querySelector(
+".check"
+);
+
+if(check.checked){
+
+entregues+=qtd;
+
+}
+
+});
 
 document.getElementById(
 "entregues"
@@ -762,7 +782,7 @@ entregues;
 document.getElementById(
 "pendentes"
 ).innerText=
-total-entregues;
+totalPacotes-entregues;
 
 }
 
