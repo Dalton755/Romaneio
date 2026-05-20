@@ -514,9 +514,11 @@ html+=`
 </div>
 
 <input
-type="checkbox"
-class="check"
-style="margin-top:15px;"
+type=checkbox
+class=check
+${item.status==="Entregue"
+?"checked"
+:""}
 >
 
 `;
@@ -530,7 +532,27 @@ card.querySelector(
 
 checkbox.addEventListener(
 "change",
-()=>{
+async()=>{
+
+await fetch(
+API_URL,
+{
+
+method:"POST",
+
+body:JSON.stringify({
+
+sequence:
+item.sequence,
+
+entregue:
+checkbox.checked
+
+})
+
+}
+
+);
 
 card.classList.toggle(
 "concluida"
