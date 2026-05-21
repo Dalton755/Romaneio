@@ -230,6 +230,24 @@ repeat(2,1fr);
 
 }
 
+ .obs{
+
+margin:10px 0;
+
+padding:8px;
+
+background:#fff6d5;
+
+border-radius:8px;
+
+font-size:13px;
+
+color:#555;
+
+min-height:20px;
+
+}
+
 </style>
 
 </head>
@@ -464,11 +482,27 @@ itens.length,
 )
 }`;
 
+
+
+let enderecoCompleto=
+item.rua+
+","+
+numero;
+
 let html=`
 
 <div class=numero>
 
 ${numero}
+
+</div>
+
+<div
+class=obs
+>
+
+${itens[0]
+.observacao||""}
 
 </div>
 
@@ -520,6 +554,85 @@ x.status==="Entregue"
 
 card.innerHTML=
 html;
+
+ const obsDiv=
+card.querySelector(
+".obs"
+);
+
+card.addEventListener(
+"dblclick",
+()=>{
+
+const textoAtual=
+obsDiv.innerText;
+
+obsDiv.innerHTML=`
+
+<input
+id=tempObs
+style="
+width:100%;
+padding:8px;
+border-radius:8px;
+border:1px solid #ddd;
+"
+value="${textoAtual}"
+>
+
+`;
+
+const input=
+document.getElementById(
+"tempObs"
+);
+
+input.focus();
+
+input.addEventListener(
+"keypress",
+async e=>{
+
+if(
+e.key==="Enter"
+){
+
+const texto=
+input.value;
+
+obsDiv.innerText=
+texto;
+
+await fetch(
+
+API_URL+
+"?action=obs",
+
+{
+
+method:"POST",
+
+body:
+JSON.stringify({
+
+endereco:
+enderecoCompleto,
+
+obs:texto
+
+})
+
+}
+
+);
+
+}
+
+}
+
+);
+
+});
 
 const check=
 card.querySelector(
