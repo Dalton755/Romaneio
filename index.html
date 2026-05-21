@@ -4,8 +4,7 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <title>Rota</title>
 
@@ -15,7 +14,7 @@ content="width=device-width,initial-scale=1">
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial;
+font-family:Arial,sans-serif;
 }
 
 body{
@@ -57,17 +56,17 @@ flex:1;
 
 padding:10px;
 
+text-align:center;
+
 background:#f5f5f5;
 
 border-radius:12px;
-
-text-align:center;
 
 }
 
 .valor{
 
-font-size:25px;
+font-size:24px;
 font-weight:bold;
 
 }
@@ -93,6 +92,8 @@ padding:10px;
 border-radius:12px;
 
 font-size:20px;
+
+cursor:pointer;
 
 }
 
@@ -153,11 +154,22 @@ margin-bottom:20px;
 
 border-radius:16px;
 
+box-shadow:
+0 2px 10px rgba(0,0,0,.08);
+
 }
 
 .finalizada{
 
 background:#dff7df;
+
+}
+
+.finalizada .titulo{
+
+text-decoration:line-through;
+
+color:#2e7d32;
 
 }
 
@@ -196,11 +208,15 @@ background:#f7f7f7;
 
 border:1px solid #ddd;
 
+transition:.3s;
+
 }
 
 .card.concluida{
 
 background:#dff7df;
+
+border-color:#4caf50;
 
 }
 
@@ -209,28 +225,33 @@ background:#dff7df;
 font-size:24px;
 font-weight:bold;
 
-}
-
-.check{
-
-margin-top:10px;
-width:22px;
-height:22px;
+margin-bottom:10px;
 
 }
 
-@media(max-width:700px){
+.pacotes{
 
-.grid{
+display:grid;
 
-grid-template-columns:
-repeat(2,1fr);
+gap:10px;
+
+margin-bottom:10px;
 
 }
 
+.pacote{
+
+background:white;
+
+padding:8px;
+
+border-radius:8px;
+
+font-size:14px;
+
 }
 
- .obs{
+.obs{
 
 margin:10px 0;
 
@@ -248,6 +269,28 @@ min-height:20px;
 
 }
 
+.check{
+
+margin-top:10px;
+
+width:22px;
+height:22px;
+
+cursor:pointer;
+
+}
+
+@media(max-width:700px){
+
+.grid{
+
+grid-template-columns:
+repeat(2,1fr);
+
+}
+
+}
+
 </style>
 
 </head>
@@ -260,27 +303,19 @@ min-height:20px;
 
 <div class="box">
 
-<div
-id="entregues"
-class="valor"
->0</div>
+<div id="entregues"
+class="valor">0</div>
 
-<small>
-Entregues
-</small>
+<small>Entregues</small>
 
 </div>
 
 <div class="box">
 
-<div
-id="pendentes"
-class="valor"
->0</div>
+<div id="pendentes"
+class="valor">0</div>
 
-<small>
-Pendentes
-</small>
+<small>Pendentes</small>
 
 </div>
 
@@ -289,20 +324,16 @@ Pendentes
 <div class="pesquisa">
 
 <button id="abrirPesquisa">
-
 🔍
-
 </button>
 
 <input
 id="busca"
-placeholder=
-"Rua, número ou pacote..."
+placeholder="Rua, número ou pacote..."
+autocomplete="off"
 >
 
-<div
-id="sugestoes"
-></div>
+<div id="sugestoes"></div>
 
 </div>
 
@@ -313,30 +344,35 @@ id="sugestoes"
 <script>
 
 const API_URL=
-"https://script.google.com/macros/s/AKfycbwMfuoQqu0xUHbCZSud9erXnx-9-sYH5MdMugA1gBBsC44Da0e3FA99AsWPV6RkFiPAug/exec";
+"SUA_URL_APPS_SCRIPT";
 
 let dados=[];
 let lista=[];
+let ultimoEstado="";
 
 async function carregarDados(){
 
 const response=
-await fetch(API_URL);
+await fetch(
+API_URL+
+"?t="+Date.now()
+);
 
 dados=
 await response.json();
 
- ultimoEstado=
+ultimoEstado=
 JSON.stringify(
 
 dados.map(x=>({
 
 sequence:x.sequence,
-status:x.status
+status:x.status,
+observacao:x.observacao
 
 }))
 
-); 
+);
 
 lista=[];
 
@@ -372,7 +408,7 @@ if(!x)return;
 
 lista.push({
 
-texto:x,
+texto:x.toString(),
 item:item
 
 });
@@ -384,6 +420,13 @@ item:item
 Object.keys(
 agrupado
 )
+
+.sort((a,b)=>{
+
+return agrupado[a][0].stop-
+agrupado[b][0].stop
+
+})
 
 .forEach(rua=>{
 
@@ -446,15 +489,14 @@ item.numero
 });
 
 
-Object
-.keys(casas)
+Object.keys(casas)
 
 .sort(
 (a,b)=>
 
-parseInt(a)
+(parseInt(a)||0)
 -
-parseInt(b)
+(parseInt(b)||0)
 
 )
 
@@ -482,10 +524,8 @@ itens.length,
 )
 }`;
 
-
-
 let enderecoCompleto=
-item.rua+
+rua+
 ","+
 numero;
 
@@ -497,23 +537,26 @@ ${numero}
 
 </div>
 
-<div
-class=obs
->
+<div class=obs>
 
 ${itens[0]
 .observacao||""}
 
 </div>
 
-<div style="
-display:grid;
+<div
+class=pacotes
+style="
 grid-template-columns:
 repeat(
-${itens.length},
-1fr);
-gap:10px;
-">
+${Math.min(
+itens.length,
+4
+)},
+1fr
+);
+"
+>
 
 `;
 
@@ -521,12 +564,14 @@ itens.forEach(item=>{
 
 html+=`
 
-<div>
+<div class=pacote>
 
+<b>
 Pac
 ${item.sequence}
+</b>
 
-<br>
+<br><br>
 
 ${item.complemento||""}
 
@@ -555,7 +600,7 @@ x.status==="Entregue"
 card.innerHTML=
 html;
 
- const obsDiv=
+const obsDiv=
 card.querySelector(
 ".obs"
 );
@@ -653,7 +698,6 @@ check.addEventListener(
 "change",
 async()=>{
 
-// se estiver desmarcando
 if(!check.checked){
 
 const confirmar=
@@ -681,11 +725,14 @@ API_URL,
 
 method:"POST",
 
-body:JSON.stringify({
+body:
+JSON.stringify({
 
-sequence:item.sequence,
+sequence:
+item.sequence,
 
-entregue:check.checked
+entregue:
+check.checked
 
 })
 
@@ -697,14 +744,11 @@ entregue:check.checked
 
 );
 
-// aplicar visual
 card.classList.toggle(
 "concluida",
 check.checked
 );
 
-
-// verificar rua inteira
 const total=
 ruaDiv.querySelectorAll(
 ".check"
@@ -723,6 +767,7 @@ total.length===marcados.length
 atualizarStatus();
 
 }
+
 );
 
 grid.appendChild(
@@ -741,6 +786,8 @@ atualizarStatus();
 
 }
 
+
+
 function atualizarStatus(){
 
 let total=0;
@@ -756,7 +803,7 @@ document
 const qtd=
 parseInt(
 card.dataset.qtd
-);
+)||1;
 
 total+=qtd;
 
@@ -788,12 +835,194 @@ total-entregues;
 
 }
 
-carregarDados();
 
-// guarda última versão recebida
-let ultimoEstado="";
 
-// atualização automática
+const busca=
+document.getElementById(
+"busca"
+);
+
+const abrir=
+document.getElementById(
+"abrirPesquisa"
+);
+
+const sugestoes=
+document.getElementById(
+"sugestoes"
+);
+
+abrir.onclick=()=>{
+
+const visivel=
+getComputedStyle(
+busca
+).display;
+
+busca.style.display=
+
+visivel==="none"
+?"block"
+:"none";
+
+if(
+busca.style.display==="block"
+){
+
+busca.focus();
+
+}
+
+};
+
+
+busca.addEventListener(
+"input",
+()=>{
+
+const termo=
+busca.value
+.toLowerCase();
+
+sugestoes.innerHTML="";
+
+if(!termo){
+
+sugestoes.style.display=
+"none";
+
+return;
+
+}
+
+lista
+
+.filter(x=>
+
+x.texto
+.toLowerCase()
+.includes(
+termo
+)
+
+)
+
+.slice(0,10)
+
+.forEach(x=>{
+
+const div=
+document.createElement(
+"div"
+);
+
+div.className=
+"sugestao";
+
+div.innerText=
+x.texto;
+
+div.onclick=()=>{
+
+buscar(x.item);
+
+};
+
+sugestoes.appendChild(
+div
+);
+
+});
+
+sugestoes.style.display=
+"block";
+
+});
+
+
+function buscar(item){
+
+document
+.querySelectorAll(
+".rua"
+)
+
+.forEach(card=>{
+
+if(
+
+card.innerText
+.includes(
+item.rua
+)
+
+){
+
+card.scrollIntoView({
+
+behavior:
+"smooth",
+
+block:
+"center"
+
+});
+
+card.style.boxShadow=
+
+"0 0 20px #4caf50";
+
+setTimeout(()=>{
+
+card.style.boxShadow=
+"";
+
+},2000);
+
+}
+
+});
+
+sugestoes.style.display=
+"none";
+
+}
+
+
+busca.addEventListener(
+"keypress",
+e=>{
+
+if(
+e.key==="Enter"
+){
+
+const primeiro=
+lista.find(x=>
+
+x.texto
+.toLowerCase()
+.includes(
+busca.value
+.toLowerCase()
+)
+
+);
+
+if(primeiro){
+
+buscar(
+primeiro.item
+);
+
+}
+
+}
+
+});
+
+
+
 setInterval(
 atualizarTempoReal,
 3000
@@ -819,34 +1048,25 @@ JSON.stringify(
 novosDados.map(x=>({
 
 sequence:x.sequence,
-status:x.status
+status:x.status,
+observacao:x.observacao
 
 }))
 
 );
 
 
-// só atualiza se houve alteração
 if(
 estadoAtual!==ultimoEstado
 ){
 
-ultimoEstado=
-estadoAtual;
-
-
-// salva posição atual da tela
 const scrollAtual=
 window.scrollY;
 
-
-// reconstruir
 dados=novosDados;
 
 await carregarDados();
 
-
-// voltar para mesma posição
 window.scrollTo({
 
 top:scrollAtual
@@ -857,14 +1077,14 @@ top:scrollAtual
 
 }catch(e){
 
-console.log(
-"Erro atualização:",
-e
-);
+console.log(e);
 
 }
 
 }
+
+
+carregarDados();
 
 </script>
 
