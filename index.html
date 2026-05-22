@@ -269,6 +269,26 @@ min-height:20px;
 
 }
 
+.localCarro{
+
+margin:8px 0;
+
+padding:8px;
+
+background:#e8f4ff;
+
+border-radius:8px;
+
+font-size:13px;
+
+color:#444;
+
+cursor:pointer;
+
+min-height:20px;
+
+}  
+
 .check{
 
 margin-top:10px;
@@ -446,6 +466,18 @@ ${rua}
 
 </div>
 
+<div class=localCarro>
+
+${
+agrupado[rua][0]
+.localCarro ||
+
+"📦 Clique para definir local no carro"
+
+}
+
+</div>
+
 <div class=parada>
 
 Parada
@@ -463,6 +495,88 @@ const grid=
 ruaDiv.querySelector(
 ".grid"
 );
+
+const localDiv=
+ruaDiv.querySelector(
+".localCarro"
+);
+
+localDiv.onclick=()=>{
+
+const atual=
+localDiv.innerText.includes(
+"📦"
+)
+?""
+:localDiv.innerText;
+
+localDiv.innerHTML=`
+
+<input
+id=tempLocal
+style="
+width:100%;
+padding:8px;
+border-radius:8px;
+border:1px solid #ddd;
+"
+value="${atual}"
+>
+
+`;
+
+const input=
+document.getElementById(
+"tempLocal"
+);
+
+input.focus();
+
+input.addEventListener(
+"keypress",
+async e=>{
+
+if(
+e.key==="Enter"
+){
+
+const texto=
+input.value.trim();
+
+await fetch(
+
+API_URL+
+"?action=local",
+
+{
+
+method:"POST",
+
+body:
+JSON.stringify({
+
+rua:rua,
+
+local:texto
+
+})
+
+}
+
+);
+
+localDiv.innerText=
+texto ||
+
+"📦 Clique para definir local no carro";
+
+}
+
+}
+
+);
+
+};  
 
 const casas={};
 
